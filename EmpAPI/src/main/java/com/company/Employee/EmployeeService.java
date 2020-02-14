@@ -1,8 +1,11 @@
 package com.company.Employee;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Random;
 
 import org.springframework.stereotype.Service;
 
@@ -33,7 +36,7 @@ public class EmployeeService {
 			}
 		}
 	}
-	
+
 	public void deleteEmployee(int empId) {
 		for (int i = 0; i < empList.size(); i++) {
 			if (empList.get(i).getEmpId() == empId) {
@@ -42,5 +45,30 @@ public class EmployeeService {
 			}
 		}
 	}
-
+	
+	public List<EmployeeDetails> getEligibleEmployee(double salary, String joiningDate) throws ParseException{
+		List<EmployeeDetails> eligibleEmployeeList = new ArrayList<EmployeeDetails>();
+		SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd");
+		for (int i = 0; i < empList.size(); i++) {
+			if (empList.get(i).getSalary() > salary && format.parse(empList.get(i).getDateOfJoining()).compareTo(format.parse(joiningDate)) > 0 ) {
+				eligibleEmployeeList.add(empList.get(i));
+			}
+		}
+		return eligibleEmployeeList;		
+	}
+	
+	public void updateDeptLocation(int deptId, String newLocation) {
+		for (int i = 0; i < empList.size(); i++) {
+			if (empList.get(i).getDeptId() == deptId) {
+				empList.get(i).setLocation(newLocation);
+			}
+		}
+	}
+	
+	public EmployeeDetails pickRandomEmployee() {
+		Random rand = new Random(); 
+		EmployeeDetails winner = empList.get(rand.nextInt(empList.size()));
+		winner.setEmployeeOfTheMonth(true);
+		return winner;
+	}
 }
